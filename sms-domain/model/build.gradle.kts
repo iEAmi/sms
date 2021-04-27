@@ -4,5 +4,5 @@ plugins {
 }
 
 dependencies {
-    api(project(":sms-domain:model"))
+    api(project(":sms-domain:common"))
 }

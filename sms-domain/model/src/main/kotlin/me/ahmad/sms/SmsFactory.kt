@@ -1,7 +1,7 @@
-package me.ahmad.sms.domain
+package me.ahmad.sms
 
-import me.ahmad.sms.domain.exception.SmsException
-import me.ahmad.sms.domain.exception.SmsException.InvalidArgument
+import me.ahmad.sms.domain.common.SmsException
+import me.ahmad.sms.domain.common.SmsException.InvalidArgument
 
 class SmsFactory internal constructor(
     private val repo: SmsRepository,

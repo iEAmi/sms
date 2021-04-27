@@ -1,6 +1,6 @@
-package me.ahmad.sms.domain
+package me.ahmad.sms
 
-import me.ahmad.sms.domain.exception.SmsException.WrappedException
+import me.ahmad.sms.domain.common.SmsException.WrappedException
 import kotlin.jvm.Throws
 
 interface ReceiverRepository {

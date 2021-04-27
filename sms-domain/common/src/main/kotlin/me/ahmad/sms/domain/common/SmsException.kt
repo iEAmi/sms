@@ -1,4 +1,4 @@
-package me.ahmad.sms.domain.exception
+package me.ahmad.sms.domain.common
 
 abstract class SmsException
 protected constructor(
