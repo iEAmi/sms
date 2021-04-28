@@ -24,9 +24,6 @@ data class Sms(
     sealed class Status {
         data class Queued(val retry: Int) : Status()
 
-        object Created : Status()
-        object Saved : Status()
-        object Consumed : Status()
         object Sending : Status()
         object Done : Status()
         object Failed : Status()

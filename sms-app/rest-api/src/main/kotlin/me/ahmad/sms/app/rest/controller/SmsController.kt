@@ -14,6 +14,8 @@ internal class SmsController(
     @Produces(MediaTypeNames.JSON_UTF_8)
     @Consumes(MediaTypeNames.JSON_UTF_8)
     fun send(@Param("number") receiver: String, @Param("body") text: String): Boolean {
+        // TODO : publish new sms task received
+
         val phoneNumber = receiver.toPhoneNumber()
         facadeService.queue(phoneNumber, text)
 

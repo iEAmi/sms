@@ -15,12 +15,10 @@ internal class SmsFactory(
             receiver = input.receiver,
             text = input.text,
             provider = input.provider,
-            status = Sms.Status.Created
+            status = Sms.Status.Queued(0)
         )
 
-        // TODO : publish Sms created event
-
-        repo.save(sms.copy(status = Sms.Status.Saved))
+        repo.save(sms)
 
         // TODO : publish Sms saved event
 

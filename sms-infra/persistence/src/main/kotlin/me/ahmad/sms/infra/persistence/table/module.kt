@@ -6,12 +6,12 @@ import org.kodein.di.*
 import org.ktorm.database.Database
 import org.ktorm.logging.Slf4jLoggerAdapter
 import org.ktorm.support.postgresql.PostgreSqlDialect
-import org.slf4j.Logger
 import java.util.concurrent.TimeUnit
 import javax.sql.DataSource
 
 internal val `table-module` = DI.Module("table-module") {
     bind { singleton { hikariCP(instance("DatabaseConfig")) } }
+    bind { provider { Migrator(instance("DatabaseConfig")) } }
     bind {
         singleton {
             Database.connect(

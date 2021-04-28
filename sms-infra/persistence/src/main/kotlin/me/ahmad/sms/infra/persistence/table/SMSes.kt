@@ -26,9 +26,6 @@ internal object SMSes : RichTable<Sms>("messages") {
 
     private fun doCreateStatus(row: QueryRowSet): Sms.Status = when (row.column(statusType)) {
         StatusType.QUEUED -> Sms.Status.Queued(row.columnOrDefault(statusQueuedRetry, 0))
-        StatusType.CREATED -> Sms.Status.Created
-        StatusType.SAVED -> Sms.Status.Saved
-        StatusType.CONSUMED -> Sms.Status.Consumed
         StatusType.SENDING -> Sms.Status.Sending
         StatusType.DONE -> Sms.Status.Done
         StatusType.FAILED -> Sms.Status.Failed
@@ -36,9 +33,6 @@ internal object SMSes : RichTable<Sms>("messages") {
 
     internal enum class StatusType {
         QUEUED,
-        CREATED,
-        SAVED,
-        CONSUMED,
         SENDING,
         DONE,
         FAILED,

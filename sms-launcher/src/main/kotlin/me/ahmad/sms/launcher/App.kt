@@ -22,7 +22,7 @@ object App {
             bindConstant("HttpServerConfig") { cfg.extract<HttpServerConfig>("server") }
             bindConstant("DatabaseConfig") { cfg.extract<DatabaseConfig>("database") }
 
-            bind { singleton { Launcher(instance(), instance()) } }
+            bind { singleton { Launcher(instance(), instance(), instance()) } }
             bind<ILoggerFactory> { singleton { LoggerFactory.getILoggerFactory() } }
             bind<Logger> { factory { name: String -> instance<ILoggerFactory>().getLogger(name) } }
 

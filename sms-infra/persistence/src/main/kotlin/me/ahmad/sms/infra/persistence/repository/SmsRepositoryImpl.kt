@@ -20,12 +20,9 @@ internal class SmsRepositoryImpl(private val database: Database) : SmsRepository
     }
 
     private fun resolveStatusType(status: Sms.Status) = when (status) {
-        Sms.Status.Consumed -> SMSes.StatusType.CONSUMED
-        Sms.Status.Created -> SMSes.StatusType.CREATED
         Sms.Status.Done -> SMSes.StatusType.DONE
         Sms.Status.Failed -> SMSes.StatusType.FAILED
         is Sms.Status.Queued -> SMSes.StatusType.QUEUED
-        Sms.Status.Saved -> SMSes.StatusType.SAVED
         Sms.Status.Sending -> SMSes.StatusType.SENDING
     }
 
