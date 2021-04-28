@@ -1,4 +1,4 @@
-package me.ahmad.sms.infra.persistence
+package me.ahmad.sms.infra.persistence.table
 
 import me.ahmad.sms.domain.Provider
 import me.ahmad.sms.domain.Receiver

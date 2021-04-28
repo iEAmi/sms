@@ -1,5 +1,6 @@
-package me.ahmad.sms.infra.persistence
+package me.ahmad.sms.infra.persistence.table
 
+import me.ahmad.sms.infra.persistence.PersistenceException
 import org.ktorm.dsl.QueryRowSet
 import org.ktorm.schema.BaseTable
 import org.ktorm.schema.Column
