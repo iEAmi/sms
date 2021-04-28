@@ -14,7 +14,12 @@ internal class SmsExceptionHandler(
     override fun handleException(ctx: ServiceRequestContext, req: HttpRequest, cause: Throwable): HttpResponse {
         if (cause !is SmsException) return unknownException(cause)
 
-        val problem = ProblemDetails(HttpStatus.INTERNAL_SERVER_ERROR.code(), cause.title, cause.type, cause.details)
+        val statusCode = when (cause) {
+            is SmsException.InvalidArgument -> HttpStatus.BAD_REQUEST.code()
+            else -> HttpStatus.INTERNAL_SERVER_ERROR.code()
+        }
+
+        val problem = ProblemDetails(statusCode, cause.title, cause.type, cause.details)
 
         return problemToResponse(problem)
     }

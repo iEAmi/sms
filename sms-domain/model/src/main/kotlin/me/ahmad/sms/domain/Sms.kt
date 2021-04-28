@@ -1,6 +1,6 @@
 package me.ahmad.sms.domain
 
-class Sms internal constructor(
+class Sms(
     private val id: Id,
     private val receiver: Receiver,
     private val text: String,

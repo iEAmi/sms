@@ -3,5 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation(":sms-domain")
+    implementation(project(":sms-domain"))
+
+    implementation("org.ktorm:ktorm-core:3.3.0")
 }
