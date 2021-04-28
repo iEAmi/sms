@@ -1,11 +1,11 @@
 package me.ahmad.sms.domain
 
-class Sms(
+data class Sms(
     private val id: Id,
-    private val receiver: Receiver,
-    private val text: String,
-    private val provider: Provider,
-    private val status: Status
+    val receiver: Receiver,
+    val text: String,
+    val provider: Provider,
+    val status: Status
 ) {
     inline class Id(val value: Long) {
         companion object {
@@ -14,7 +14,7 @@ class Sms(
     }
 
     sealed class Status {
-        data class Queued(private val retry: Int, private val maxRetry: Int) : Status()
+        data class Queued(val retry: Int) : Status()
 
         object Created : Status()
         object Saved : Status()

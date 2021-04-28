@@ -18,7 +18,11 @@ internal class SmsFactory(
             status = Sms.Status.Created
         )
 
-        repo.save(sms)
+        // TODO : publish Sms created event
+
+        repo.save(sms.copy(status = Sms.Status.Saved))
+
+        // TODO : publish Sms saved event
 
         return sms
     }

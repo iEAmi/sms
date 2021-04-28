@@ -1,8 +1,8 @@
 package me.ahmad.sms.domain
 
 class Receiver(
-    private val id: Id,
-    private val phoneNumber: PhoneNumber
+    val id: Id,
+    val phoneNumber: PhoneNumber
 ) {
     inline class Id(val value: Long) {
         companion object {
