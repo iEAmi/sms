@@ -1,4 +1,4 @@
-package me.ahmad.sms
+package me.ahmad.sms.domain
 
 class Provider(
     private val id: Id,

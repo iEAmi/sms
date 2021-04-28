@@ -1,6 +1,4 @@
-package me.ahmad.sms
-
-import me.ahmad.sms.domain.common.SmsException
+package me.ahmad.sms.domain
 
 inline class PhoneNumber internal constructor(val value: String) {
     companion object {

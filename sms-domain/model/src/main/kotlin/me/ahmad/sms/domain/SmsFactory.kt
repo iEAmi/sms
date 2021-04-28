@@ -1,11 +1,9 @@
-package me.ahmad.sms
+package me.ahmad.sms.domain
 
-import me.ahmad.sms.domain.common.SmsException
-import me.ahmad.sms.domain.common.SmsException.InvalidArgument
+import me.ahmad.sms.domain.SmsException.InvalidArgument
 
-class SmsFactory internal constructor(
-    private val repo: SmsRepository,
-    private val receiverFactory: ReceiverFactory
+internal class SmsFactory(
+    private val repo: SmsRepository
 ) {
 
     @Throws(InvalidArgument::class)
@@ -14,7 +12,7 @@ class SmsFactory internal constructor(
 
         val sms = Sms(
             id = Sms.Id.ZERO,
-            receiver = receiverFactory.create(input.receiver),
+            receiver = input.receiver,
             text = input.text,
             provider = input.provider,
             status = Sms.Status.Created
@@ -26,7 +24,7 @@ class SmsFactory internal constructor(
     }
 
     interface Input {
-        val receiver: PhoneNumber
+        val receiver: Receiver
         val text: String
         val provider: Provider
     }

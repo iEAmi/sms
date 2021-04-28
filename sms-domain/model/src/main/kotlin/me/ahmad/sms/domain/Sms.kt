@@ -1,4 +1,4 @@
-package me.ahmad.sms
+package me.ahmad.sms.domain
 
 class Sms internal constructor(
     private val id: Id,

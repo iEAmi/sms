@@ -8,4 +8,6 @@ dependencies {
     implementation("com.linecorp.armeria:armeria")
     implementation("com.linecorp.armeria:armeria-retrofit2")
     implementation("com.linecorp.armeria:armeria-logback")
+
+    implementation("com.typesafe:config:1.4.1")
 }
