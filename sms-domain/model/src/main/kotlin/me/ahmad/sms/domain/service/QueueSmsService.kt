@@ -4,13 +4,14 @@ import me.ahmad.sms.domain.*
 import me.ahmad.sms.domain.SmsException
 import me.ahmad.sms.domain.SmsException.WrappedException
 
-class SendSmsService internal constructor(
+class QueueSmsService internal constructor(
     private val providerSelector: ProviderSelector,
     private val receiverFactory: ReceiverFactory,
-    private val smsFactory: SmsFactory
+    private val smsFactory: SmsFactory,
+    private val queueService: QueueService
 ) {
     @Throws(WrappedException::class, ProviderNotFoundException::class)
-    fun send(phoneNumber: PhoneNumber, text: String) {
+    fun queue(phoneNumber: PhoneNumber, text: String) {
         val receiver = receiverFactory.create(phoneNumber)
         val provider = providerSelector.select(receiver, text)
             ?: throw ProviderNotFoundException("Could not find any provider. try again later")
@@ -21,7 +22,9 @@ class SendSmsService internal constructor(
             override val provider: Provider = provider
         })
 
+        queueService.push(sms)
 
+        // todo : publish sms published event
     }
 
     class ProviderNotFoundException(

@@ -2,16 +2,14 @@ package me.ahmad.sms.app
 
 import me.ahmad.sms.domain.PhoneNumber
 import me.ahmad.sms.domain.SmsException.WrappedException
-import me.ahmad.sms.domain.service.SendSmsService
-import me.ahmad.sms.domain.service.SendSmsService.ProviderNotFoundException
+import me.ahmad.sms.domain.service.QueueSmsService
+import me.ahmad.sms.domain.service.QueueSmsService.ProviderNotFoundException
 
 
 class SmsFacadeService internal constructor(
-    private val sendSmsService: SendSmsService
+    private val queueSmsService: QueueSmsService
 ) {
 
     @Throws(WrappedException::class, ProviderNotFoundException::class)
-    fun send(phoneNumber: PhoneNumber, text: String) {
-        sendSmsService.send(phoneNumber, text)
-    }
+    fun queue(phoneNumber: PhoneNumber, text: String) = queueSmsService.queue(phoneNumber, text)
 }

@@ -10,6 +10,7 @@ include(
 include(
     "sms-app",
     "sms-app:rest-api",
+    "sms-app:queue-api",
     "sms-app:defs",
     "sms-app:common",
 )
@@ -18,6 +19,7 @@ include(
 include(
     "sms-infra",
     "sms-infra:persistence",
+    "sms-infra:queue"
 )
 
 // Launcher

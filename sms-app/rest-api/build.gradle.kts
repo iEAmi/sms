@@ -4,5 +4,4 @@ plugins {
 
 dependencies {
     implementation(project(":sms-app:common"))
-//    implementation(project(":sms-domain"))
 }

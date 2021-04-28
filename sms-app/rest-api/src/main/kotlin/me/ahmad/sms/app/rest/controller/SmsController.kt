@@ -13,8 +13,10 @@ internal class SmsController(
     @Get("/send")
     @Produces(MediaTypeNames.JSON_UTF_8)
     @Consumes(MediaTypeNames.JSON_UTF_8)
-    fun send(@Param("number") receiver: String, @Param("body") text: String) {
+    fun send(@Param("number") receiver: String, @Param("body") text: String): Boolean {
         val phoneNumber = receiver.toPhoneNumber()
-        facadeService.send(phoneNumber, text)
+        facadeService.queue(phoneNumber, text)
+
+        return true
     }
 }

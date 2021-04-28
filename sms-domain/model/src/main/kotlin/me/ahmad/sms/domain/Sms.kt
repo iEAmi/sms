@@ -1,12 +1,20 @@
 package me.ahmad.sms.domain
 
 data class Sms(
-    private val id: Id,
+    val id: Id,
     val receiver: Receiver,
     val text: String,
     val provider: Provider,
     val status: Status
 ) {
+    override fun toString() =
+        "Sms(" +
+                "id=$id, " +
+                "receiver=${receiver.phoneNumber.value}, " +
+                "text='$text', " +
+                "provider=${provider.id}, " +
+                "status=${status.javaClass.simpleName})"
+
     inline class Id(val value: Long) {
         companion object {
             val ZERO = Id(0)
