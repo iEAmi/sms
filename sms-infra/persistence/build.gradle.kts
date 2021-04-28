@@ -6,4 +6,6 @@ dependencies {
     implementation(project(":sms-domain"))
 
     implementation("org.ktorm:ktorm-core:3.3.0")
+    implementation("com.zaxxer:HikariCP:4.0.3")
+    implementation("org.ktorm:ktorm-support-postgresql:3.3.0")
 }

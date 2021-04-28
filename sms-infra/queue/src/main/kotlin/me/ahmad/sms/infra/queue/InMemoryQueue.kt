@@ -6,9 +6,13 @@ import me.ahmad.sms.app.queue.Queue
 import me.ahmad.sms.app.queue.QueueContext
 import me.ahmad.sms.domain.Sms
 import me.ahmad.sms.domain.service.QueueService
+import org.kodein.di.DI
 import org.reactivestreams.Subscriber
+import org.slf4j.ILoggerFactory
 
-internal object InMemoryQueue : Queue(), QueueService {
+internal class InMemoryQueue(
+    private val loggerFactory: ILoggerFactory
+) : Queue(), QueueService {
     private val flow = PublishProcessor.create<Sms>()
 
     override fun subscribeActual(subscriber: Subscriber<in QueueContext>?) {
@@ -16,7 +20,7 @@ internal object InMemoryQueue : Queue(), QueueService {
             .onBackpressureBuffer()
             .distinct { it.id }
             .subscribeOn(Schedulers.computation())
-            .map { QueueContextImpl(this, it, null) }
+            .map { QueueContextImpl(this, it, loggerFactory.getLogger("QueueContextImpl")) }
             .subscribe(subscriber)
     }
 

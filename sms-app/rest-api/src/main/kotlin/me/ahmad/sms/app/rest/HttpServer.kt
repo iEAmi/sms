@@ -15,6 +15,8 @@ internal constructor(
 ) : Closeable {
     private val server: Server by lazy { init() }
 
+    fun start() = server.start()
+
     private fun init(): Server {
         val builder = Server.builder()
         builder.http(InetSocketAddress(config.host, config.port))

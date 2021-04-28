@@ -8,18 +8,18 @@ import org.slf4j.Logger
 internal class QueueContextImpl(
     private val queueService: QueueService,
     override val sms: Sms,
-    private val logger: Logger?
+    private val logger: Logger
 ) : QueueContext {
     override fun done() {
-        logger?.debug("$sms done")
+        logger.debug("$sms done")
     }
 
     override fun reject() {
-        logger?.debug("$sms rejected")
+        logger.debug("$sms rejected")
     }
 
     override fun requeue() {
-        logger?.info("$sms requeue")
+        logger.info("$sms requeue")
 
         queueService.push(sms)
     }
