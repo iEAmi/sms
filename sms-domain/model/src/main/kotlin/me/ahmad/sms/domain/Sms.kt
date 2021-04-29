@@ -7,6 +7,11 @@ data class Sms(
     val provider: Provider,
     val status: Status
 ) {
+
+    fun isDoneOrFailed(): Boolean = status is Status.Done || status is Status.Failed
+
+    fun isFailed(): Boolean = status is Status.Failed
+
     override fun toString() =
         "Sms(" +
                 "id=$id, " +

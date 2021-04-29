@@ -9,7 +9,7 @@ import org.kodein.di.instance
 import org.kodein.di.provider
 
 internal val `repository-module` = DI.Module("repository-module") {
-    bind<ProviderRepository> { provider { ProviderRepositoryImpl() } }
+    bind<ProviderRepository> { provider { ProviderRepositoryImpl(instance()) } }
     bind<ReceiverRepository> { provider { ReceiverRepositoryImpl(instance()) } }
     bind<SmsRepository> { provider { SmsRepositoryImpl(instance()) } }
 }

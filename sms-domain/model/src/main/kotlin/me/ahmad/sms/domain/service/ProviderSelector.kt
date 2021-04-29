@@ -6,7 +6,12 @@ import me.ahmad.sms.domain.Receiver
 
 class ProviderSelector(private val repo: ProviderRepository) {
 
-    fun select(receiver: Receiver, text: String): Provider? {
-        return null
+    fun select(receiver: Receiver, text: String, exclude: Provider? = null): Provider? {
+        val all = repo.all().toMutableList()
+
+        if (exclude != null)
+            all.remove(exclude)
+
+        return all.shuffled().first()
     }
 }

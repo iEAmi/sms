@@ -3,24 +3,20 @@ package me.ahmad.sms.infra.queue
 import me.ahmad.sms.app.queue.QueueContext
 import me.ahmad.sms.domain.Sms
 import me.ahmad.sms.domain.service.QueueService
-import org.slf4j.Logger
 
 internal class QueueContextImpl(
     private val queueService: QueueService,
     override val sms: Sms,
-    private val logger: Logger
 ) : QueueContext {
     override fun done() {
-        logger.debug("$sms done")
+        // nothing
     }
 
     override fun reject() {
-        logger.debug("$sms rejected")
+        // nothing
     }
 
-    override fun requeue() {
-        logger.info("$sms requeue")
-
+    override fun requeue(sms: Sms) {
         queueService.push(sms)
     }
 }

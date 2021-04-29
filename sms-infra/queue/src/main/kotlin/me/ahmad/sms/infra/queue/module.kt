@@ -7,5 +7,5 @@ import org.kodein.di.instance
 import org.kodein.di.singleton
 
 val `sms-infra-queue-module` = DI.Module("sms-infra-queue-module") {
-    bind<Queue> { singleton { InMemoryQueue(instance()) } }
+    bind<Queue> { singleton { InMemoryQueue() } }
 }

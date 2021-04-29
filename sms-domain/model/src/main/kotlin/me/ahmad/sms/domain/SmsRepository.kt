@@ -6,4 +6,7 @@ interface SmsRepository {
 
     @Throws(WrappedException::class)
     fun save(sms: Sms): Sms.Id
+
+    @Throws(WrappedException::class)
+    fun update(sms: Sms)
 }

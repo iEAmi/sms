@@ -4,7 +4,9 @@ import me.ahmad.sms.domain.Sms
 import me.ahmad.sms.domain.SmsRepository
 import me.ahmad.sms.infra.persistence.table.SMSes
 import org.ktorm.database.Database
+import org.ktorm.dsl.eq
 import org.ktorm.dsl.insertAndGenerateKey
+import org.ktorm.dsl.update
 
 internal class SmsRepositoryImpl(private val database: Database) : SmsRepository {
     override fun save(sms: Sms): Sms.Id {
@@ -17,6 +19,17 @@ internal class SmsRepositoryImpl(private val database: Database) : SmsRepository
         }
 
         return Sms.Id(id as Long)
+    }
+
+    override fun update(sms: Sms) {
+        database.update(SMSes) {
+            where { it.id eq sms.id }
+            set(it.receiverId, sms.receiver.id)
+            set(it.text, sms.text)
+            set(it.providerId, sms.provider.id)
+            set(it.statusType, resolveStatusType(sms.status))
+            set(it.statusQueuedRetry, resolveStatusQueuedRetry(sms.status))
+        }
     }
 
     private fun resolveStatusType(status: Sms.Status) = when (status) {

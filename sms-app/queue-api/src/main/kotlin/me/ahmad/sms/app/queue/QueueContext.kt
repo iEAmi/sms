@@ -9,5 +9,5 @@ interface QueueContext {
 
     fun reject()
 
-    fun requeue()
+    fun requeue(sms: Sms)
 }
