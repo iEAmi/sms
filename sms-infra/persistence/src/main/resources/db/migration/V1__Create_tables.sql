@@ -1,7 +1,8 @@
 CREATE TABLE receivers
 (
-    id           BIGSERIAL PRIMARY KEY,
-    phone_number VARCHAR NOT NULL UNIQUE
+    id            BIGSERIAL PRIMARY KEY,
+    phone_number  VARCHAR     NOT NULL UNIQUE,
+    creation_date TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE TABLE providers
@@ -24,13 +25,23 @@ CREATE TABLE providers
                 WHEN total_count = 0 THEN 0
                 ELSE (failed_count / total_count) * 100
                 END
-            ) STORED
+            ) STORED,
+    creation_date  TIMESTAMPTZ     NOT NULL DEFAULT now()
 );
 
 CREATE TABLE messages
 (
-    id          BIGSERIAL PRIMARY KEY,
-    receiver_id BIGINT     NOT NULL REFERENCES receivers (id),
-    text        TEXT       NOT NULL,
-    status      VARCHAR(7) NOT NULL CHECK ( status in ('QUEUED', 'SENDING', 'DONE', 'FAILED') )
+    id            BIGSERIAL PRIMARY KEY,
+    receiver_id   BIGINT      NOT NULL REFERENCES receivers (id),
+    text          TEXT        NOT NULL,
+    status        VARCHAR(7)  NOT NULL CHECK ( status in ('QUEUED', 'SENDING', 'DONE', 'FAILED') ),
+    creation_date TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE events
+(
+    id            UUID PRIMARY KEY,
+    message_id    BIGINT      NOT NULL REFERENCES messages (id) ON DELETE RESTRICT,
+    payload       JSON        NOT NULL,
+    creation_date TIMESTAMPTZ NOT NULL
 );
