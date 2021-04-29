@@ -29,10 +29,8 @@ CREATE TABLE providers
 
 CREATE TABLE messages
 (
-    id                  BIGSERIAL PRIMARY KEY,
-    receiver_id         BIGINT      NOT NULL REFERENCES receivers (id),
-    text                TEXT        NOT NULL,
-    provider_id         VARCHAR(11) NOT NULL REFERENCES providers (id),
-    status_type         VARCHAR(7)  NOT NULL CHECK ( status_type in ('QUEUED', 'SENDING', 'DONE', 'FAILED') ),
-    status_queued_retry INT         NOT NULL DEFAULT 0
+    id          BIGSERIAL PRIMARY KEY,
+    receiver_id BIGINT     NOT NULL REFERENCES receivers (id),
+    text        TEXT       NOT NULL,
+    status      VARCHAR(7) NOT NULL CHECK ( status in ('QUEUED', 'SENDING', 'DONE', 'FAILED') )
 );

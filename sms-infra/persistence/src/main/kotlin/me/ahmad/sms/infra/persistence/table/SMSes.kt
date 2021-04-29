@@ -12,7 +12,7 @@ internal object SMSes : RichTable<Sms>("messages") {
     val id = long("id").primaryKey().transform(Sms::Id) { it.value }
     val receiverId = long("receiver_id").transform(Receiver::Id) { it.value }
     val text = text("text")
-    val statusType = enum<StatusType>("status_type")
+    val status = enum<StatusType>("status")
 
     override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = Sms(
         id = row.column(id),
@@ -21,7 +21,7 @@ internal object SMSes : RichTable<Sms>("messages") {
         status = doCreateStatus(row)
     )
 
-    private fun doCreateStatus(row: QueryRowSet): Sms.Status = when (row.column(statusType)) {
+    private fun doCreateStatus(row: QueryRowSet): Sms.Status = when (row.column(status)) {
         StatusType.QUEUED -> Sms.Status.Queued
         StatusType.SENDING -> Sms.Status.Sending
         StatusType.DONE -> Sms.Status.Done
