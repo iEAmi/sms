@@ -2,8 +2,11 @@ package me.ahmad.sms.infra.persistence.repository
 
 import me.ahmad.sms.domain.Provider
 import me.ahmad.sms.domain.ProviderRepository
+import me.ahmad.sms.infra.persistence.table.Providers
 import me.ahmad.sms.infra.persistence.table.providers
 import org.ktorm.database.Database
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.update
 import org.ktorm.entity.toList
 import java.util.*
 
@@ -19,5 +22,16 @@ internal class ProviderRepositoryImpl(
         cache.addAll(database.providers.toList())
 
         return cache.toMutableList()
+    }
+
+    override fun update(provider: Provider) {
+        database.update(Providers) {
+            where { it.id eq provider.id }
+            set(it.totalCount, provider.totalCount)
+            set(it.doneCount, provider.doneCount)
+            set(it.donePercent, provider.donePercent)
+            set(it.failedCount, provider.failedCount)
+            set(it.failedPercent, provider.failedPercent)
+        }
     }
 }

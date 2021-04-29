@@ -11,21 +11,9 @@ CREATE TABLE providers
     address        VARCHAR         NOT NULL,
     total_count    BIGINT          NOT NULL DEFAULT 0,
     done_count     BIGINT          NOT NULL DEFAULT 0,
-    done_percent   NUMERIC(100, 2) NOT NULL
-        GENERATED ALWAYS AS (
-            CASE
-                WHEN total_count = 0 THEN 0
-                ELSE (done_count / total_count) * 100
-                END
-            ) STORED,
+    done_percent   NUMERIC(100, 2) NOT NULL DEFAULT 0,
     failed_count   BIGINT          NOT NULL DEFAULT 0,
-    failed_percent NUMERIC(100, 2) NOT NULL
-        GENERATED ALWAYS AS (
-            CASE
-                WHEN total_count = 0 THEN 0
-                ELSE (failed_count / total_count) * 100
-                END
-            ) STORED,
+    failed_percent NUMERIC(100, 2) NOT NULL DEFAULT 0,
     creation_date  TIMESTAMPTZ     NOT NULL DEFAULT now()
 );
 

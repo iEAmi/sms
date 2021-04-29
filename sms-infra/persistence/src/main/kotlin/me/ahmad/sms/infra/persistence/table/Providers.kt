@@ -19,7 +19,12 @@ internal object Providers : RichTable<Provider>("providers") {
 
     override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = Provider(
         id = row.column(id),
-        address = row.column(address)
+        address = row.column(address),
+        totalCount = row.column(totalCount).toULong(),
+        doneCount = row.column(doneCount).toULong(),
+        donePercent = row.column(donePercent),
+        failedCount = row.column(failedCount).toULong(),
+        failedPercent = row.column(failedPercent),
     )
 }
 

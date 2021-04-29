@@ -13,6 +13,7 @@ include(
     "sms-app:queue-api",
     "sms-app:defs",
     "sms-app:common",
+    "sms-app:event-handler"
 )
 
 // Infrastructure modules
@@ -20,7 +21,7 @@ include(
     "sms-infra",
     "sms-infra:persistence",
     "sms-infra:queue",
-    "sms-infra:dispatcher"
+    "sms-infra:dispatcher",
 )
 
 // Launcher
