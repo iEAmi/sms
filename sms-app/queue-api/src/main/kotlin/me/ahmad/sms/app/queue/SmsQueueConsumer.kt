@@ -18,7 +18,7 @@ internal class SmsQueueConsumer(
             handler.handle(t)
         } catch (e: Exception) {
             e.printStackTrace()
-            // TODO : publish sms exception event
+            // TODO : publish sms UnHandleExceptionThrew  event
         }
     }
 
