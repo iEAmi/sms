@@ -94,9 +94,9 @@ data class Sms(
     }
 }
 
-fun Sms.publishEvent(selector: SmsEventSelector.() -> Unit): (EventPublisher) -> Unit = {
+fun Sms.publishEvent(init: SmsEventSelector.() -> Unit): (EventPublisher) -> Unit = {
     val s = SmsEventSelector(this, it)
-    selector.invoke(s)
+    s.init()
 }
 
 class SmsEventSelector internal constructor(

@@ -70,7 +70,7 @@ internal class SmsHandler(
         val result = dispatcher.dispatch(sms, provider)
 
         return if (result) {
-            // TODO publish provider Done event
+            provider.publishEvent { smsSendSuccessed() }(eventPublisher)
 
             val temp = sms.goToDoneState()(smsRepository)
 
@@ -78,7 +78,7 @@ internal class SmsHandler(
 
             temp
         } else {
-            // TODO publish provider failed event
+            provider.publishEvent { smsSendFailed() }(eventPublisher)
 
             sms
         }
