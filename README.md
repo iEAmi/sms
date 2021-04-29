@@ -2,6 +2,8 @@
 #### Smartech task
 
 ---
+<img src="./architecture.png">
+
 <div style="font-family:Tahoma">
 
 <div dir="rtl">
