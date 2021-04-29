@@ -19,7 +19,8 @@ include(
 include(
     "sms-infra",
     "sms-infra:persistence",
-    "sms-infra:queue"
+    "sms-infra:queue",
+    "sms-infra:dispatcher"
 )
 
 // Launcher
