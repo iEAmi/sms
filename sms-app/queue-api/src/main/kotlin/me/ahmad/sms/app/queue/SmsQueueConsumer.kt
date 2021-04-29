@@ -3,6 +3,7 @@ package me.ahmad.sms.app.queue
 import org.reactivestreams.Subscriber
 import org.reactivestreams.Subscription
 import org.slf4j.Logger
+import java.lang.Exception
 
 internal class SmsQueueConsumer(
     private val handler: SmsHandler,
@@ -13,7 +14,12 @@ internal class SmsQueueConsumer(
     }
 
     override fun onNext(t: QueueContext) {
-        handler.handle(t)
+        try {
+            handler.handle(t)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // TODO : publish sms exception event
+        }
     }
 
     override fun onError(t: Throwable?) {

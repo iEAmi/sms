@@ -13,9 +13,7 @@ internal class SmsRepositoryImpl(private val database: Database) : SmsRepository
         val id = database.insertAndGenerateKey(SMSes) {
             set(it.receiverId, sms.receiver.id)
             set(it.text, sms.text)
-            set(it.providerId, sms.provider.id)
             set(it.statusType, resolveStatusType(sms.status))
-            set(it.statusQueuedRetry, resolveStatusQueuedRetry(sms.status))
         }
 
         return Sms.Id(id as Long)
@@ -26,9 +24,7 @@ internal class SmsRepositoryImpl(private val database: Database) : SmsRepository
             where { it.id eq sms.id }
             set(it.receiverId, sms.receiver.id)
             set(it.text, sms.text)
-            set(it.providerId, sms.provider.id)
             set(it.statusType, resolveStatusType(sms.status))
-            set(it.statusQueuedRetry, resolveStatusQueuedRetry(sms.status))
         }
     }
 
@@ -38,7 +34,4 @@ internal class SmsRepositoryImpl(private val database: Database) : SmsRepository
         is Sms.Status.Queued -> SMSes.StatusType.QUEUED
         Sms.Status.Sending -> SMSes.StatusType.SENDING
     }
-
-    private fun resolveStatusQueuedRetry(status: Sms.Status): Int? =
-        if (status is Sms.Status.Queued) status.retry else null
 }

@@ -14,8 +14,7 @@ internal class SmsFactory(
             id = Sms.Id.ZERO,
             receiver = input.receiver,
             text = input.text,
-            provider = input.provider,
-            status = Sms.Status.Queued(0)
+            status = Sms.Status.Queued
         )
 
         repo.save(sms)
@@ -28,6 +27,5 @@ internal class SmsFactory(
     interface Input {
         val receiver: Receiver
         val text: String
-        val provider: Provider
     }
 }

@@ -1,5 +1,6 @@
 package me.ahmad.sms.app.queue
 
+import me.ahmad.sms.domain.Provider
 import me.ahmad.sms.domain.Sms
 import me.ahmad.sms.domain.SmsRepository
 import me.ahmad.sms.domain.service.ProviderSelector
@@ -18,58 +19,58 @@ internal class SmsHandler(
 
         val sms = ctx.sms
         if (sms.isDoneOrFailed()) {
+            // reject sms because this was done/failed
             ctx.reject()
             return
         }
 
-        val result = dispatcher.dispatch(sms)
+        // Changes Sms state to SENDING
+        sms.goToSendingState().invoke(smsRepository)
 
-        if (result) smsDone(ctx) else smsFailed(ctx)
-    }
-
-    private fun smsDone(ctx: QueueContext) {
-        val sms = ctx.sms.copy(status = Sms.Status.Done)
-
-        try {
-            smsRepository.update(sms)
-        } catch (e: Exception) {
-            // ignoring exception here. because sms was sent
-        } finally {
-            ctx.done()
-
-            logger.info("$sms Done.")
-            // TODO : publish sms Done event
+        val providers = providerSelector.select(sms.receiver, sms.text)
+        if (providers.isEmpty()) {
+            // no provider exist, so requeue sms until provider available
+            ctx.requeue(sms)
+            return
         }
+
+        // iterates providers and tries send sms
+        doHandle(ctx, providers)
+
+        // finally, drop SMS from queue
+        ctx.done()
     }
 
-    private fun smsFailed(ctx: QueueContext) {
-        val retry = (ctx.sms.status as Sms.Status.Queued).retry + 1
+    private fun doHandle(ctx: QueueContext, providers: List<Provider>) {
+        var sms = ctx.sms.copy()
 
-        val sms = if (retry < 3) {
-            // select another provider for retrying
-            val newProvider = providerSelector.select(ctx.sms.receiver, ctx.sms.text, ctx.sms.provider)
+        for (provider in providers) {
+            // tries to send sms with all available providers.
+            sms = execute(sms, provider)
 
-            ctx.sms.copy(provider = newProvider ?: ctx.sms.provider, status = Sms.Status.Queued(retry))
+            // if sms was done then break for loop and ignore remaining providers
+            if (sms.isDone())
+                return
+        }
+
+        // TODO : publish sms Failed event
+
+        sms = sms.goToFailedState().invoke(smsRepository)
+        // TODO : publish SMS to retry queue
+    }
+
+    private fun execute(sms: Sms, provider: Provider): Sms {
+        val result = dispatcher.dispatch(sms, provider)
+
+        return if (result) {
+            // TODO publish sms done event
+            // TODO publish provider Done event
+
+            sms.goToDoneState().invoke(smsRepository)
         } else {
-            // sms failed
-            ctx.sms.copy(status = Sms.Status.Failed)
-        }
+            // TODO publish provider failed event
 
-        try {
-            smsRepository.update(sms)
-        } catch (e: Exception) {
-            if (sms.isFailed()) {
-                // sms failed
-                ctx.reject()
-
-                logger.info("$sms failed.")
-                // TODO : publish sms failed event
-            } else {
-                ctx.requeue(sms)
-
-                logger.info("$sms Queue.")
-                // TODO : publish sms Queue event
-            }
+            sms
         }
     }
 }

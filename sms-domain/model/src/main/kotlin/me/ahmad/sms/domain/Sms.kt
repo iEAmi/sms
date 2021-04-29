@@ -4,20 +4,40 @@ data class Sms(
     val id: Id,
     val receiver: Receiver,
     val text: String,
-    val provider: Provider,
     val status: Status
 ) {
+    fun goToSendingState(): (SmsRepository) -> Sms = {
+        val new = this.copy(status = Status.Sending)
+        it.save(new)
 
-    fun isDoneOrFailed(): Boolean = status is Status.Done || status is Status.Failed
+        new
+    }
+
+    fun goToDoneState(): (SmsRepository) -> Sms = {
+        val new = this.copy(status = Status.Done)
+        it.save(new)
+
+        new
+    }
+
+    fun goToFailedState(): (SmsRepository) -> Sms = {
+        val new = this.copy(status = Status.Failed)
+        it.save(new)
+
+        new
+    }
 
     fun isFailed(): Boolean = status is Status.Failed
+
+    fun isDone(): Boolean = status is Status.Done
+
+    fun isDoneOrFailed(): Boolean = isDone() || isFailed()
 
     override fun toString() =
         "Sms(" +
                 "id=$id, " +
                 "receiver=${receiver.phoneNumber.value}, " +
                 "text='$text', " +
-                "provider=${provider.id}, " +
                 "status=${status.javaClass.simpleName})"
 
     inline class Id(val value: Long) {
@@ -27,8 +47,7 @@ data class Sms(
     }
 
     sealed class Status {
-        data class Queued(val retry: Int) : Status()
-
+        object Queued : Status()
         object Sending : Status()
         object Done : Status()
         object Failed : Status()
