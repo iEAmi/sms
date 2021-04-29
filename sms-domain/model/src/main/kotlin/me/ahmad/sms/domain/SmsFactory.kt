@@ -1,9 +1,11 @@
 package me.ahmad.sms.domain
 
 import me.ahmad.sms.domain.SmsException.InvalidArgument
+import me.ahmad.sms.domain.event.EventPublisher
 
 internal class SmsFactory(
-    private val repo: SmsRepository
+    private val repo: SmsRepository,
+    private val eventPublisher: EventPublisher
 ) {
 
     @Throws(InvalidArgument::class)
@@ -19,7 +21,8 @@ internal class SmsFactory(
 
         repo.save(sms)
 
-        // TODO : publish Sms saved event
+        // publish Sms saved event
+        sms.publishEvent { saved() }(eventPublisher)
 
         return sms
     }

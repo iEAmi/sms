@@ -3,6 +3,8 @@ package me.ahmad.sms.app.queue
 import me.ahmad.sms.domain.Provider
 import me.ahmad.sms.domain.Sms
 import me.ahmad.sms.domain.SmsRepository
+import me.ahmad.sms.domain.event.EventPublisher
+import me.ahmad.sms.domain.publishEvent
 import me.ahmad.sms.domain.service.ProviderSelector
 import org.slf4j.Logger
 
@@ -10,38 +12,41 @@ internal class SmsHandler(
     private val logger: Logger,
     private val dispatcher: SmsDispatcher,
     private val smsRepository: SmsRepository,
-    private val providerSelector: ProviderSelector
+    private val providerSelector: ProviderSelector,
+    private val eventPublisher: EventPublisher
 ) {
-
-    fun handle(ctx: QueueContext) {
+    fun handle(ctx: QueueContext): Sms {
         logger.info("${ctx.sms} consumed.")
-        // TODO : publish sms consumed event
 
         val sms = ctx.sms
+        sms.publishEvent { consumed() }(eventPublisher)
+
         if (sms.isDoneOrFailed()) {
             // reject sms because this was done/failed
             ctx.reject()
-            return
+            return sms
         }
-
-        // Changes Sms state to SENDING
-        sms.goToSendingState().invoke(smsRepository)
 
         val providers = providerSelector.select(sms.receiver, sms.text)
         if (providers.isEmpty()) {
             // no provider exist, so requeue sms until provider available
             ctx.requeue(sms)
-            return
+            return sms
         }
 
+        // Changes Sms state to SENDING
+        sms.goToSendingState()(smsRepository)
+
         // iterates providers and tries send sms
-        doHandle(ctx, providers)
+        val handledSms = doHandle(ctx, providers)
 
         // finally, drop SMS from queue
         ctx.done()
+
+        return handledSms
     }
 
-    private fun doHandle(ctx: QueueContext, providers: List<Provider>) {
+    private fun doHandle(ctx: QueueContext, providers: List<Provider>): Sms {
         var sms = ctx.sms.copy()
 
         for (provider in providers) {
@@ -50,23 +55,28 @@ internal class SmsHandler(
 
             // if sms was done then break for loop and ignore remaining providers
             if (sms.isDone())
-                return
+                return sms
         }
 
-        // TODO : publish sms Failed event
+        sms = sms.goToFailedState()(smsRepository)
 
-        sms = sms.goToFailedState().invoke(smsRepository)
-        // TODO : publish SMS to retry queue
+        // publish sms Failed event and retry queue
+        sms.publishEvent { failed(); publishedToRetryQueue() }(eventPublisher)
+
+        return sms
     }
 
     private fun execute(sms: Sms, provider: Provider): Sms {
         val result = dispatcher.dispatch(sms, provider)
 
         return if (result) {
-            // TODO publish sms done event
             // TODO publish provider Done event
 
-            sms.goToDoneState().invoke(smsRepository)
+            val temp = sms.goToDoneState()(smsRepository)
+
+            temp.publishEvent { done(provider) }(eventPublisher)
+
+            temp
         } else {
             // TODO publish provider failed event
 
