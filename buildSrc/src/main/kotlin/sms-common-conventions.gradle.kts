@@ -29,6 +29,6 @@ tasks.test {
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xinline-classes")
+        freeCompilerArgs = listOf("-Xinline-classes", "-Xuse-experimental=kotlin.ExperimentalUnsignedTypes")
     }
 }

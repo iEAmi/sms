@@ -27,10 +27,10 @@ internal class ProviderRepositoryImpl(
     override fun update(provider: Provider) {
         database.update(Providers) {
             where { it.id eq provider.id }
-            set(it.totalCount, provider.totalCount)
-            set(it.doneCount, provider.doneCount)
+            set(it.totalCount, provider.totalCount.toLong())
+            set(it.doneCount, provider.doneCount.toLong())
             set(it.donePercent, provider.donePercent)
-            set(it.failedCount, provider.failedCount)
+            set(it.failedCount, provider.failedCount.toLong())
             set(it.failedPercent, provider.failedPercent)
         }
     }
