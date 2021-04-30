@@ -15,11 +15,11 @@ internal class ReceiverRepositoryImpl(private val database: Database) : Receiver
         return database.receivers.find { it.phoneNumber eq byPhoneNumber }
     }
 
-    override fun save(receiver: Receiver): Receiver.Id {
+    override fun save(receiver: Receiver): Receiver {
         val id = database.insertAndGenerateKey(Receivers) {
             set(it.phoneNumber, receiver.phoneNumber)
         }
 
-        return Receiver.Id(id as Long)
+        return receiver.copy(id = id as Receiver.Id)
     }
 }

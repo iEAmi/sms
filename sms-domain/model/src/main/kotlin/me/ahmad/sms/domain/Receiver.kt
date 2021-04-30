@@ -1,6 +1,6 @@
 package me.ahmad.sms.domain
 
-class Receiver(
+data class Receiver(
     val id: Id,
     val phoneNumber: PhoneNumber
 ) {

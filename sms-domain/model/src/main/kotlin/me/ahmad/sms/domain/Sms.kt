@@ -10,24 +10,15 @@ data class Sms(
     val status: Status
 ) : Entity<Sms.Id> {
     fun goToSendingState(): (SmsRepository) -> Sms = {
-        val new = this.copy(status = Status.Sending)
-        it.save(new)
-
-        new
+        it.save(this.copy(status = Status.Sending))
     }
 
     fun goToDoneState(): (SmsRepository) -> Sms = {
-        val new = this.copy(status = Status.Done)
-        it.save(new)
-
-        new
+        it.save(this.copy(status = Status.Done))
     }
 
     fun goToFailedState(): (SmsRepository) -> Sms = {
-        val new = this.copy(status = Status.Failed)
-        it.save(new)
-
-        new
+        it.save(this.copy(status = Status.Failed))
     }
 
     fun isFailed(): Boolean = status is Status.Failed

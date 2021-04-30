@@ -9,14 +9,14 @@ import org.ktorm.dsl.insertAndGenerateKey
 import org.ktorm.dsl.update
 
 internal class SmsRepositoryImpl(private val database: Database) : SmsRepository {
-    override fun save(sms: Sms): Sms.Id {
+    override fun save(sms: Sms): Sms {
         val id = database.insertAndGenerateKey(SMSes) {
             set(it.receiverId, sms.receiver.id)
             set(it.text, sms.text)
             set(it.status, resolveStatusType(sms.status))
         }
 
-        return Sms.Id(id as Long)
+        return sms.copy(id = id as Sms.Id)
     }
 
     override fun update(sms: Sms) {

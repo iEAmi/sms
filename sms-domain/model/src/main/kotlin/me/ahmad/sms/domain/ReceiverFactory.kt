@@ -11,8 +11,6 @@ internal class ReceiverFactory(private val repo: ReceiverRepository) {
     private fun createNewReceiver(phoneNumber: PhoneNumber): Receiver {
         val receiver = Receiver(id = Receiver.Id.ZERO, phoneNumber)
 
-        repo.save(receiver)
-
-        return receiver
+        return repo.save(receiver)
     }
 }

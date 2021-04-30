@@ -8,5 +8,5 @@ interface ReceiverRepository {
     fun get(byPhoneNumber: PhoneNumber): Receiver?
 
     @Throws(WrappedException::class)
-    fun save(receiver: Receiver): Receiver.Id
+    fun save(receiver: Receiver): Receiver
 }
