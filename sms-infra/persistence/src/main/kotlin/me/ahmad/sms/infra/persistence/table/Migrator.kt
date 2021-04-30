@@ -6,8 +6,8 @@ class Migrator internal constructor(private val cfg: DatabaseConfig) {
 
     fun migrateUp() {
         val flyway = Flyway.configure()
-            .dataSource(cfg.url, cfg.username, cfg.password)
-            .defaultSchema(cfg.schema)
+            .schemas(cfg.schema)
+            .dataSource(cfg.jdbcUrl, cfg.username, cfg.password)
             .load()
         flyway.migrate()
     }

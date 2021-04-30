@@ -1,5 +1,6 @@
 package me.ahmad.sms.launcher
 
+import com.github.lalyos.jfiglet.FigletFont
 import com.typesafe.config.ConfigFactory
 import io.github.config4k.extract
 import me.ahmad.sms.app.`sms-app-module`
@@ -16,11 +17,12 @@ object App {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val cfg = ConfigFactory.defaultApplication()
+        println(FigletFont.convertOneLine("SMS"))
+        val cfg = ConfigFactory.defaultApplication().resolve()
 
         val di = DI {
-            bindConstant("HttpServerConfig") { cfg.extract<HttpServerConfig>("server") }
-            bindConstant("DatabaseConfig") { cfg.extract<DatabaseConfig>("database") }
+            bindConstant("HttpServerConfig") { cfg.extract<HttpServerConfig>("sms.server") }
+            bindConstant("DatabaseConfig") { cfg.extract<DatabaseConfig>("sms.database") }
 
             bind { singleton { Launcher(instance(), instance(), instance(), instance()) } }
             bind<ILoggerFactory> { singleton { LoggerFactory.getILoggerFactory() } }

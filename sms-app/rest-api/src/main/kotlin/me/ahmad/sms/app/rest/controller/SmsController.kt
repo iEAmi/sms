@@ -2,12 +2,12 @@ package me.ahmad.sms.app.rest.controller
 
 import com.linecorp.armeria.common.MediaTypeNames
 import com.linecorp.armeria.server.annotation.*
-import me.ahmad.sms.app.SmsFacadeService
+import me.ahmad.sms.domain.service.QueueSmsService
 import me.ahmad.sms.domain.toPhoneNumber
 
 @ServiceName("sms")
 internal class SmsController(
-    private val facadeService: SmsFacadeService
+    private val queueSmsService: QueueSmsService
 ) {
 
     @Get("/send")
@@ -15,7 +15,7 @@ internal class SmsController(
     @Consumes(MediaTypeNames.JSON_UTF_8)
     fun send(@Param("number") receiver: String, @Param("body") text: String): Boolean {
         val phoneNumber = receiver.toPhoneNumber()
-        facadeService.queue(phoneNumber, text)
+        queueSmsService.queue(phoneNumber, text)
 
         return true
     }

@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":sms-domain"))
     implementation(project(":sms-app"))
     implementation(project(":sms-infra"))
     implementation("io.github.config4k:config4k:0.4.2")

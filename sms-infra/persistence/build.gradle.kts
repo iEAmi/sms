@@ -9,5 +9,5 @@ dependencies {
     implementation("com.zaxxer:HikariCP:4.0.3")
     implementation("org.ktorm:ktorm-support-postgresql:3.3.0")
     implementation("org.flywaydb:flyway-core:7.8.2")
-    runtime("org.postgresql:postgresql:42.2.16")
+    implementation("org.postgresql:postgresql:42.2.16")
 }

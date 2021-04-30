@@ -25,17 +25,16 @@ internal val `table-module` = DI.Module("table-module") {
 
 private fun hikariCP(cfg: DatabaseConfig): DataSource {
     val config = HikariConfig()
-    config.jdbcUrl = cfg.url
+    config.addDataSourceProperty("serverName", cfg.serverName)
+    config.addDataSourceProperty("portNumber", cfg.port)
+    config.addDataSourceProperty("databaseName", cfg.databaseName)
+    config.dataSourceClassName = "org.postgresql.ds.PGSimpleDataSource"
     config.username = cfg.username
     config.password = cfg.password
     config.schema = cfg.schema
     config.poolName = "sms-hikari-jdbc-connection-pool"
-    config.connectionTimeout = TimeUnit.SECONDS.toMillis(10)
-    config.idleTimeout = TimeUnit.MINUTES.toMillis(2)
+    config.connectionTimeout = TimeUnit.SECONDS.toMillis(60)
     config.maximumPoolSize = 10
-    config.addDataSourceProperty("cachePrepStmts", "true")
-    config.addDataSourceProperty("prepStmtCacheSize", "250")
-    config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
 
     return HikariDataSource(config)
 }

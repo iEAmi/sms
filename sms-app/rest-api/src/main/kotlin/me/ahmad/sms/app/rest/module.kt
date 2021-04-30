@@ -1,10 +1,21 @@
 package me.ahmad.sms.app.rest
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import me.ahmad.sms.app.rest.controller.SmsController
 import org.kodein.di.*
 
 val `sms-app-rest-api-module` = DI.Module("sms-app:rest-api-module") {
     bind { provider { SmsController(instance()) } }
-    bind { singleton { HttpServer(instance(arg = "HttpServer"), instance(), instance(), instance("HttpServerConfig")) } }
+    bind {
+        singleton {
+            HttpServer(
+                instance(arg = "HttpServer"),
+                instance(),
+                instance(),
+                instance("HttpServerConfig")
+            )
+        }
+    }
+    bind { provider { ObjectMapper() } }
     bind { singleton { SmsExceptionHandler(instance()) } }
 }

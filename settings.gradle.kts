@@ -12,7 +12,6 @@ include(
     "sms-app:rest-api",
     "sms-app:queue-api",
     "sms-app:defs",
-    "sms-app:common",
     "sms-app:event-handler"
 )
 

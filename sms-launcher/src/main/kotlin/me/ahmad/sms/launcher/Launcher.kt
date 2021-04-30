@@ -15,7 +15,6 @@ internal class Launcher(
 ) {
 
     fun start() {
-        println(FigletFont.convertOneLine("SMS"))
         migrator.migrateUp()
 
         addShutdownHook()
