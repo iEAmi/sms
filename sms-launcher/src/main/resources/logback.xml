@@ -7,11 +7,12 @@
 
     <logger name="Database" level="WARN"/>
     <logger name="org.flywaydb" level="WARN"/>
-    <logger name="com.linecorp.armeria.common" level="WARN"/>
     <logger name="com.zaxxer.hikari.HikariDataSource" level="WARN"/>
-    <logger name="com.linecorp.armeria.internal.common.util.TransportTypeProvider" level="OFF"/>
+
+    <logger name="com.linecorp.armeria.common" level="WARN"/>
+    <logger name="com.linecorp.armeria.internal" level="OFF"/>
 
     <root level="INFO">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

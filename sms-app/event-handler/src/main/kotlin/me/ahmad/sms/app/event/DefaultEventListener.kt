@@ -12,8 +12,6 @@ internal class DefaultEventListener(
 ) : EventListener {
 
     override fun onEvent(event: Event<*>) {
-        logger.info("New event received: ${event.javaClass.simpleName} -> $${event.creationDate} ${event.id}")
-
         if (event is Sms.Event) {
             handleSmsEvents(event)
 

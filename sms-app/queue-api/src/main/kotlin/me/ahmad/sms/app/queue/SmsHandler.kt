@@ -6,19 +6,15 @@ import me.ahmad.sms.domain.SmsRepository
 import me.ahmad.sms.domain.event.EventPublisher
 import me.ahmad.sms.domain.publishEvent
 import me.ahmad.sms.domain.service.ProviderSelector
-import org.slf4j.Logger
 
 internal class SmsHandler(
-    private val logger: Logger,
     private val dispatcher: SmsDispatcher,
     private val smsRepository: SmsRepository,
     private val providerSelector: ProviderSelector,
     private val eventPublisher: EventPublisher
 ) {
     fun handle(ctx: QueueContext): Sms {
-        logger.info("${ctx.sms} consumed.")
-
-        val sms = ctx.sms
+        var sms = ctx.sms
         sms.publishEvent { consumed() }(eventPublisher)
 
         if (sms.isDoneOrFailed()) {
@@ -35,10 +31,10 @@ internal class SmsHandler(
         }
 
         // Changes Sms state to SENDING
-        sms.goToSendingState()(smsRepository)
+        sms = sms.goToSendingState()(smsRepository)
 
         // iterates providers and tries send sms
-        val handledSms = doHandle(ctx, providers)
+        val handledSms = doHandle(sms, providers)
 
         // finally, drop SMS from queue
         ctx.done()
@@ -46,24 +42,24 @@ internal class SmsHandler(
         return handledSms
     }
 
-    private fun doHandle(ctx: QueueContext, providers: List<Provider>): Sms {
-        var sms = ctx.sms.copy()
+    private fun doHandle(sms: Sms, providers: List<Provider>): Sms {
+        var smsCopy = sms.copy()
 
         for (provider in providers) {
             // tries to send sms with all available providers.
-            sms = execute(sms, provider)
+            smsCopy = execute(smsCopy, provider)
 
             // if sms was done then break for loop and ignore remaining providers
-            if (sms.isDone())
-                return sms
+            if (smsCopy.isDone())
+                return smsCopy
         }
 
-        sms = sms.goToFailedState()(smsRepository)
+        smsCopy = smsCopy.goToFailedState()(smsRepository)
 
         // publish sms Failed event and retry queue
-        sms.publishEvent { failed(); publishedToRetryQueue() }(eventPublisher)
+        smsCopy.publishEvent { failed(); publishedToRetryQueue() }(eventPublisher)
 
-        return sms
+        return smsCopy
     }
 
     private fun execute(sms: Sms, provider: Provider): Sms {

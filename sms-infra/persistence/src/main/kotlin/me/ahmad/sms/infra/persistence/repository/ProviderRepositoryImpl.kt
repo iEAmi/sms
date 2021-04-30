@@ -8,20 +8,21 @@ import org.ktorm.database.Database
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.update
 import org.ktorm.entity.toList
-import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 internal class ProviderRepositoryImpl(
     private val database: Database
 ) : ProviderRepository {
-    private val cache = Collections.synchronizedList(mutableListOf<Provider>())
+    private val cache = ConcurrentHashMap<Provider.Id, Provider>()
 
     override fun all(): List<Provider> {
         if (cache.isNotEmpty())
-            return cache.toMutableList()
+            return cache.elements().toList()
 
-        cache.addAll(database.providers.toList())
+        database.providers.toList().forEach { cache[it.id] = it }
 
-        return cache.toMutableList()
+
+        return cache.elements().toList()
     }
 
     override fun update(provider: Provider) {
@@ -33,5 +34,8 @@ internal class ProviderRepositoryImpl(
             set(it.failedCount, provider.failedCount.toLong())
             set(it.failedPercent, provider.failedPercent)
         }
+
+        // update inner cache
+        cache[provider.id] = provider
     }
 }

@@ -11,33 +11,37 @@ import org.reactivestreams.Subscriber
 import org.reactivestreams.Subscription
 
 internal class EventBusImpl : EventBus, EventPublisher, Subscriber<Event<*>> {
-    private val flow = PublishProcessor.create<Event<*>>()
+    private val subject = PublishProcessor.create<Event<*>>()
+    private val flow = subject.onBackpressureBuffer()
+        .distinct { it.id }
+        .observeOn(Schedulers.computation())
     private var listener: EventListener? = null
+    private lateinit var subscription: Subscription
 
     init {
-        flow.share()
-            .onBackpressureBuffer()
-            .distinct { it.id }
-            .subscribeOn(Schedulers.computation())
-            .subscribe(this)
+        flow.subscribe(this)
     }
 
-    override fun <T : Entity<*>> publish(event: Event<T>) = flow.onNext(event)
+    override fun <T : Entity<*>> publish(event: Event<T>) = subject.onNext(event)
 
     override fun setListener(listener: EventListener) {
         this.listener = listener
     }
 
     override fun close() {
-        flow.onComplete()
+        subscription.cancel()
+        subject.onComplete()
     }
 
-    override fun onSubscribe(s: Subscription?) {
-        s?.request(Long.MAX_VALUE)
+    override fun onSubscribe(s: Subscription) {
+        this.subscription = s
+        s.request(1)
     }
 
     override fun onNext(t: Event<*>) {
         listener?.onEvent(t)
+
+        subscription.request(1)
     }
 
     override fun onError(t: Throwable?) {
