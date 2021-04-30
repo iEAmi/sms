@@ -11,5 +11,5 @@ internal class SmsDispatcherImpl : SmsDispatcher {
     private val rng = ThreadLocalRandom.current()
 
     override fun dispatch(sms: Sms, provider: Provider): Boolean =
-        map.computeIfAbsent(provider.id) { rng.nextBoolean() }.not()
+        map.compute(provider.id) { _, value -> value?.not() ?: rng.nextBoolean() }!!
 }
