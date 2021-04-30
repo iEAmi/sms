@@ -19,13 +19,15 @@ internal class SmsRepositoryImpl(private val database: Database) : SmsRepository
         return sms.copy(id = id as Sms.Id)
     }
 
-    override fun update(sms: Sms) {
+    override fun update(sms: Sms): Sms {
         database.update(SMSes) {
             where { it.id eq sms.id }
             set(it.receiverId, sms.receiver.id)
             set(it.text, sms.text)
             set(it.status, resolveStatusType(sms.status))
         }
+
+        return sms
     }
 
     private fun resolveStatusType(status: Sms.Status) = when (status) {

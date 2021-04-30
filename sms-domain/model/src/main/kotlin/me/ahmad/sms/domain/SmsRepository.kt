@@ -8,5 +8,5 @@ interface SmsRepository {
     fun save(sms: Sms): Sms
 
     @Throws(WrappedException::class)
-    fun update(sms: Sms)
+    fun update(sms: Sms): Sms
 }
