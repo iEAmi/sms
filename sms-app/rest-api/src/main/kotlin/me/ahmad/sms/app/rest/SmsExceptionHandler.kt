@@ -12,6 +12,8 @@ internal class SmsExceptionHandler(
 ) : ExceptionHandlerFunction {
 
     override fun handleException(ctx: ServiceRequestContext, req: HttpRequest, cause: Throwable): HttpResponse {
+        cause.printStackTrace()
+        
         if (cause !is SmsException) return unknownException(cause)
 
         val statusCode = when (cause) {
