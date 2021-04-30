@@ -1,5 +1,6 @@
 package me.ahmad.sms.app.event
 
+import com.google.gson.Gson
 import me.ahmad.sms.domain.Provider
 import me.ahmad.sms.domain.ProviderRepository
 import me.ahmad.sms.domain.Sms
@@ -8,7 +9,9 @@ import org.slf4j.Logger
 
 internal class DefaultEventListener(
     private val logger: Logger,
-    private val providerRepository: ProviderRepository
+    private val providerRepository: ProviderRepository,
+    private val eventWarehouse: EventWarehouse,
+    private val gson: Gson
 ) : EventListener {
 
     override fun onEvent(event: Event<*>) {
@@ -28,7 +31,7 @@ internal class DefaultEventListener(
     private fun handleSmsEvents(event: Sms.Event) {
         logSmsEvent(event)
 
-        // todo : save event to database
+        eventWarehouse.store(event, gson.toJson(event))
     }
 
     private fun handleProviderEvents(event: Provider.Event) {

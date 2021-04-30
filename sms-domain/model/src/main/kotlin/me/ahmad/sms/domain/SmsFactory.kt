@@ -10,7 +10,7 @@ internal class SmsFactory(
 
     @Throws(InvalidArgument::class)
     fun createSms(input: Input): Sms {
-        if (input.text.isBlank()) throw SmsException.invalidArg("${input.text} could not be empty.")
+        if (input.text.isBlank()) throw SmsException.invalidArg("body could not be empty.")
 
         val sms = repo.save(
             Sms(

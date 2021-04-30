@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation(project(":sms-domain"))
+    implementation(project(":sms-app:event-handler"))
 
     implementation("org.ktorm:ktorm-core:3.3.0")
     implementation("com.zaxxer:HikariCP:4.0.3")

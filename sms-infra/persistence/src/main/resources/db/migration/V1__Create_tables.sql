@@ -30,6 +30,6 @@ CREATE TABLE events
 (
     id            UUID PRIMARY KEY,
     message_id    BIGINT      NOT NULL REFERENCES messages (id) ON DELETE RESTRICT,
-    payload       JSON        NOT NULL,
+    payload       TEXT        NOT NULL,
     creation_date TIMESTAMPTZ NOT NULL
 );

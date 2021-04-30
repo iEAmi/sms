@@ -6,10 +6,12 @@ import com.linecorp.armeria.common.MediaTypeNames
 import com.linecorp.armeria.server.annotation.Get
 import com.linecorp.armeria.server.annotation.Param
 import com.linecorp.armeria.server.annotation.Produces
+import me.ahmad.sms.domain.SmsException
 import me.ahmad.sms.domain.service.QueueSmsService
 import me.ahmad.sms.domain.toPhoneNumber
 import org.jtwig.JtwigModel
 import org.jtwig.JtwigTemplate
+import java.util.*
 
 internal class SmsController(
     private val queueSmsService: QueueSmsService,
@@ -18,9 +20,12 @@ internal class SmsController(
 
     @Get("/send")
     @Produces(MediaTypeNames.JSON_UTF_8)
-    fun send(@Param("number") receiver: String, @Param("body") text: String): Boolean {
-        val phoneNumber = receiver.toPhoneNumber()
-        queueSmsService.queue(phoneNumber, text)
+    fun send(@Param("number") receiver: Optional<String>, @Param("body") text: Optional<String>): Boolean {
+        if (receiver.isEmpty) throw SmsException.nullArg("number could not be null")
+        if (text.isEmpty) throw SmsException.nullArg("body could not be null")
+
+        val phoneNumber = receiver.get().toPhoneNumber()
+        queueSmsService.queue(phoneNumber, text.get())
 
         return true
     }
