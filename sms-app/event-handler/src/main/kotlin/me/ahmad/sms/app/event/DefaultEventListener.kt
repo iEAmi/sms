@@ -26,33 +26,27 @@ internal class DefaultEventListener(
     }
 
     private fun handleSmsEvents(event: Sms.Event) {
-        when (event) {
-            is Sms.Event.Consumed -> logger.info("Sms consumed : ${event.entity}")
-            is Sms.Event.Done -> logger.info("Sms Done : ${event.entity}")
-            is Sms.Event.Failed -> logger.info("Sms failed : ${event.entity}")
-            is Sms.Event.Published -> logger.info("Sms published : ${event.entity}")
-            is Sms.Event.PublishedToRetryQueue -> logger.info("Sms PublishedToRetryQueue : ${event.entity}")
-            is Sms.Event.Saved -> logger.info("Sms Saved : ${event.entity}")
-            is Sms.Event.UnhandledExceptionThrew -> logger.info("Sms UnhandledExceptionThrew : ${event.entity}")
-        }
+        logSmsEvent(event)
 
         // todo : save event to database
     }
 
     private fun handleProviderEvents(event: Provider.Event) {
+        logProviderEvent(event)
+
         val provider = event.entity
 
         when (event) {
-            is Provider.Event.SmsSendFailed -> {
-                logger.info("Provider failed : $provider")
-
-                provider.increaseFailedCountByOne()(providerRepository)
-            }
-            is Provider.Event.SmsSendSuccessed -> {
-                logger.info("Provider done : $provider")
-
-                provider.increaseDoneCountByOne()(providerRepository)
-            }
+            is Provider.Event.SmsSendFailed -> provider.increaseFailedCountByOne()(providerRepository)
+            is Provider.Event.SmsSendSuccessed -> provider.increaseDoneCountByOne()(providerRepository)
         }
+    }
+
+    private fun logSmsEvent(event: Sms.Event) {
+        logger.info(String.format("%-8s %-21s : %s", "Sms", event.javaClass.simpleName, event.entity))
+    }
+
+    private fun logProviderEvent(event: Provider.Event) {
+        logger.info(String.format("%-8s %-21s : %s", "Provider", event.javaClass.simpleName, event.entity))
     }
 }
