@@ -15,7 +15,7 @@ internal class EventBusImpl : EventBus, EventPublisher, Subscriber<Event<*>> {
     private val flow = subject.onBackpressureBuffer()
         .distinct { it.id }
         .observeOn(Schedulers.computation())
-    private var listener: EventListener? = null
+    private val listeners = HashSet<EventListener>()
     private lateinit var subscription: Subscription
 
     init {
@@ -24,8 +24,8 @@ internal class EventBusImpl : EventBus, EventPublisher, Subscriber<Event<*>> {
 
     override fun <T : Entity<*>> publish(event: Event<T>) = subject.onNext(event)
 
-    override fun setListener(listener: EventListener) {
-        this.listener = listener
+    override fun registerListener(listener: EventListener) {
+        this.listeners.add(listener)
     }
 
     override fun close() {
@@ -39,7 +39,7 @@ internal class EventBusImpl : EventBus, EventPublisher, Subscriber<Event<*>> {
     }
 
     override fun onNext(t: Event<*>) {
-        listener?.onEvent(t)
+        listeners.forEach { it.onEvent(t) }
 
         subscription.request(1)
     }
