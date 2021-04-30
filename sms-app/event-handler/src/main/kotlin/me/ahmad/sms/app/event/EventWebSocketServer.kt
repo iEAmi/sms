@@ -1,6 +1,7 @@
 package me.ahmad.sms.app.event
 
 import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import me.ahmad.sms.domain.Provider
 import me.ahmad.sms.domain.Sms
 import me.ahmad.sms.domain.event.Event
@@ -36,16 +37,22 @@ internal class EventWebSocketServer(
     }
 
     override fun onEvent(event: Event<*>) {
-        val entity = when (event) {
-            is Sms.Event -> "SMS"
-            is Provider.Event -> "PROVIDER"
-            else -> "UNKNOWN"
+        when (event) {
+            is Sms.Event -> broadcast(gson.toJson(EventMessage("SMS", event.javaClass.simpleName, event)))
+            is Provider.Event -> broadcast(gson.toJson(EventMessage("PROVIDER", event.javaClass.simpleName, event)))
+            else -> {
+            }
         }
-        val type = event.javaClass.simpleName
-
-        val message = gson.toJson(EventMessage(entity, type, event))
-        broadcast(message)
     }
 
-    private data class EventMessage(val entity: String, val type: String, val event: Event<*>)
+    data class EventMessage(
+        @SerializedName("entity")
+        val entity: String,
+
+        @SerializedName("type")
+        val type: String,
+
+        @SerializedName("event")
+        val event: Any
+    )
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event live tracking</title>
+</head>
+<body>
+
+<h3>Event live tracking</h3>
+
+<ul id="list">
+    <li></li>
+</ul>
+
+</body>
+
+<script lang="js">
+    webSocket = new WebSocket("ws://127.0.0.1:8081");
+    webSocket.onmessage = function (event) {
+        console.log(event);
+        var ul = document.getElementById("list");
+        var li = document.createElement("li");
+        li.appendChild(document.createTextNode(event.data));
+        ul.appendChild(li);
+    }
+
+</script>
+
+</html>
