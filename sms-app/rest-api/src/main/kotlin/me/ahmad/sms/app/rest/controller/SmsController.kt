@@ -5,7 +5,6 @@ import com.linecorp.armeria.server.annotation.*
 import me.ahmad.sms.domain.service.QueueSmsService
 import me.ahmad.sms.domain.toPhoneNumber
 
-@ServiceName("sms")
 internal class SmsController(
     private val queueSmsService: QueueSmsService
 ) {
