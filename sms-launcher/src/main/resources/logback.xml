@@ -5,7 +5,10 @@
         </encoder>
     </appender>
 
-    <logger name="com.linecorp.armeria.common.Flags" level="WARN"/>
+    <logger name="Database" level="WARN"/>
+    <logger name="org.flywaydb" level="WARN"/>
+    <logger name="com.linecorp.armeria.common" level="WARN"/>
+    <logger name="com.zaxxer.hikari.HikariDataSource" level="WARN"/>
     <logger name="com.linecorp.armeria.internal.common.util.TransportTypeProvider" level="OFF"/>
 
     <root level="INFO">
