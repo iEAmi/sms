@@ -25,7 +25,7 @@ internal class ProviderRepositoryImpl(
         return cache.elements().toList()
     }
 
-    override fun update(provider: Provider) {
+    override fun update(provider: Provider): Provider {
         database.update(Providers) {
             where { it.id eq provider.id }
             set(it.totalCount, provider.totalCount.toLong())
@@ -37,5 +37,7 @@ internal class ProviderRepositoryImpl(
 
         // update inner cache
         cache[provider.id] = provider
+
+        return provider
     }
 }

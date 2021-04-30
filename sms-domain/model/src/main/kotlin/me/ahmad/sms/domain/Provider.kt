@@ -15,27 +15,23 @@ data class Provider(
 ) : Entity<Provider.Id> {
 
     fun increaseDoneCountByOne(): (ProviderRepository) -> Provider = {
-        var u = this.copy(doneCount = this.doneCount + 1u, totalCount = this.totalCount + 1u)
-        u = u.copy(
-            donePercent = (u.doneCount.toDouble() / u.totalCount.toDouble()) * 100.0,
-            failedPercent = u.failedCount.toDouble() / u.totalCount.toDouble() * 100.0
+        val u = this.copy(doneCount = this.doneCount + 1u, totalCount = this.totalCount + 1u)
+        it.update(
+            u.copy(
+                donePercent = (u.doneCount.toDouble() / u.totalCount.toDouble()) * 100.0,
+                failedPercent = u.failedCount.toDouble() / u.totalCount.toDouble() * 100.0
+            )
         )
-
-        it.update(u)
-
-        u
     }
 
     fun increaseFailedCountByOne(): (ProviderRepository) -> Provider = {
-        var u = this.copy(failedCount = this.failedCount + 1u, totalCount = this.totalCount + 1u)
-        u = u.copy(
-            donePercent = (u.doneCount.toDouble() / u.totalCount.toDouble()) * 100.0,
-            failedPercent = u.failedCount.toDouble() / u.totalCount.toDouble() * 100.0
+        val u = this.copy(failedCount = this.failedCount + 1u, totalCount = this.totalCount + 1u)
+        it.update(
+            u.copy(
+                donePercent = (u.doneCount.toDouble() / u.totalCount.toDouble()) * 100.0,
+                failedPercent = u.failedCount.toDouble() / u.totalCount.toDouble() * 100.0
+            )
         )
-
-        it.update(u)
-
-        u
     }
 
     override fun toString(): String {
