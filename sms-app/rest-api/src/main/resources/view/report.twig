@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+</head>
+<body style="font-family:Tahoma">
+<h2>Report</h2>
+
+Total sms: {{ report.totalSms }}
+<br>failed: {{ report.totalFailed }} ({{ report.totalFailedPercent }}%)
+<br>success: {{ report.totalSuccess }} ({{ report.totalSuccessPercent }}%)
+
+<br>
+<h3>Providers</h3>
+
+{% for provider in report.providers %}
+Provider: {{ provider.id.value }} <br>
+             Total  Count: {{ provider.totalCount }} <br>
+             Done   Count: {{ provider.doneCount }} ({{ provider.donePercent }}%) <br>
+             Failed Count: {{ provider.failedCount }} ({{ provider.failedPercent }}%) <br>
+             <br>
+{% endfor %}
+
+<br>
+<h3>Top Ten Receivers</h3>
+
+{% for receiver in report.topReceivers %}
+{{ receiver.phoneNumber }} <br>
+{% endfor %}
+
+</body>
+</html>

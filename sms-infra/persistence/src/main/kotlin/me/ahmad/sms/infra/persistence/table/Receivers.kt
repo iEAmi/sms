@@ -12,7 +12,9 @@ internal object Receivers : RichTable<Receiver>("receivers") {
     val id = long("id").primaryKey().transform(Receiver::Id) { it.value }
     val phoneNumber = varchar("phone_number").transform(PhoneNumber.Companion::fromString) { it.value }
 
-    override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = Receiver(
+    override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean) = from(row)
+
+    fun from(row: QueryRowSet) = Receiver(
         id = row.column(id),
         phoneNumber = row.column(phoneNumber)
     )
